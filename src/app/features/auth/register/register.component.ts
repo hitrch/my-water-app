@@ -5,8 +5,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
 import { MatInputModule } from '@angular/material/input'
 import { MatButtonModule } from '@angular/material/button'
 import { AuthService } from '../../../core/services/auth.service'
-import { Router } from '@angular/router'
 import {AuthStore} from '../../../core/store/auth.store';
+import {passwordsMatchValidator} from '../../../shared/validators/auth.validators';
 
 @Component({
   selector: 'app-register',
@@ -27,11 +27,14 @@ export class RegisterComponent {
   private dialogRef = inject<MatDialogRef<RegisterComponent>>(MatDialogRef)
   private authStore = inject(AuthStore)
 
-  form: FormGroup = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
-    confirmPassword: ['', Validators.required]
-  })
+  form: FormGroup = this.fb.nonNullable.group(
+    {
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+    },
+    { validators: [passwordsMatchValidator()] }
+  )
 
   submitRegister(): void {
     if (this.form.invalid) return

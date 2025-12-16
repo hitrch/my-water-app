@@ -1,23 +1,51 @@
 <div class="p-4">
   <h2 mat-dialog-title>Register</h2>
+
   <form [formGroup]="form" (ngSubmit)="submitRegister()">
+    @let emailCtrl = form.get('email');
+    @let passwordCtrl = form.get('password');
+    @let confirmPasswordCtrl = form.get('confirmPassword');
+
     <mat-form-field appearance="fill" class="w-full mb-2">
       <mat-label>Email</mat-label>
-      <input matInput formControlName="email">
+      <input matInput type="email" autocomplete="email" formControlName="email">
+
+      @if (emailCtrl && (emailCtrl.touched || emailCtrl.dirty)) {
+        @if (emailCtrl.hasError('required')) {
+          <mat-error>Email is required</mat-error>
+        } @else if (emailCtrl.hasError('email')) {
+          <mat-error>Enter a valid email</mat-error>
+        }
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-full mb-2">
       <mat-label>Password</mat-label>
-      <input matInput type="password" formControlName="password">
+      <input matInput type="password" autocomplete="new-password" formControlName="password">
+
+      @if (passwordCtrl && (passwordCtrl.touched || passwordCtrl.dirty) && passwordCtrl.hasError('required')) {
+        <mat-error>Password is required</mat-error>
+      }
     </mat-form-field>
 
     <mat-form-field appearance="fill" class="w-full mb-2">
       <mat-label>Confirm Password</mat-label>
-      <input matInput type="password" formControlName="confirmPassword">
+      <input matInput type="password" autocomplete="new-password" formControlName="confirmPassword">
+
+      @if (confirmPasswordCtrl && (confirmPasswordCtrl.touched || confirmPasswordCtrl.dirty)) {
+        @if (confirmPasswordCtrl.hasError('required')) {
+          <mat-error>Please confirm your password</mat-error>
+        } @else if (
+          form.hasError('passwordMismatch') &&
+          passwordCtrl && (passwordCtrl.touched || passwordCtrl.dirty)
+          ) {
+          <mat-error>Passwords do not match</mat-error>
+        }
+      }
     </mat-form-field>
 
     <div class="flex justify-end mr-4">
-      <button mat-raised-button color="primary" type="submit">Register</button>
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Register</button>
     </div>
   </form>
 </div>
