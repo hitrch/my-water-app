@@ -45,7 +45,15 @@
     </mat-form-field>
 
     <div class="flex justify-end mr-4">
-      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">Register</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        class="w-full sm:w-auto"
+        [disabled]="form.invalid"
+      >
+        Register
+      </button>
     </div>
   </form>
 </div>

@@ -11,10 +11,21 @@
   </mat-form-field>
 
   <div class="flex justify-end gap-2">
-    <button mat-raised-button color="primary" (click)="closeLoginPopup()">
+    <button
+      mat-raised-button
+      color="primary"
+      class="w-full sm:w-auto"
+      (click)="closeLoginPopup()"
+    >
       Cancel
     </button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      class="w-full sm:w-auto"
+      [disabled]="form.invalid"
+    >
       Login
     </button>
   </div>
