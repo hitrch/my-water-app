@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Login</h2>
+<form [formGroup]="form" (ngSubmit)="submitLogin()" mat-dialog-content>
+  <mat-form-field appearance="fill" class="w-full mb-4">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" placeholder="Email" />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="w-full mb-4">
+    <mat-label>Password</mat-label>
+    <input type="password" matInput formControlName="password" />
+  </mat-form-field>
+
+  <div class="flex justify-end gap-2">
+    <button mat-raised-button color="primary" (click)="closeLoginPopup()">
+      Cancel
+    </button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid">
+      Login
+    </button>
+  </div>
+</form>

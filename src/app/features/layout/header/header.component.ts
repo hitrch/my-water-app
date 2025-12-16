@@ -1,0 +1,36 @@
+import {Component, inject} from '@angular/core';
+import {MatButton} from '@angular/material/button';
+import {MatDialog} from '@angular/material/dialog';
+import {LoginComponent} from '../../auth/login/login.component';
+import {RegisterComponent} from '../../auth/register/register.component';
+import {AuthStore} from '../../../core/store/auth.store';
+
+@Component({
+  selector: 'app-header',
+  imports: [
+    MatButton
+  ],
+  templateUrl: './header.component.html',
+  styleUrl: './header.component.scss'
+})
+export class HeaderComponent {
+  dialog = inject(MatDialog)
+  authStore = inject(AuthStore)
+
+  openLogin(): void {
+    this.dialog.open(LoginComponent, {
+      width: '400px',
+    })
+  }
+
+  openRegister(): void {
+    this.dialog.open(RegisterComponent, {
+      width: '600px',
+      height: '400px'
+    })
+  }
+
+  logout(): void {
+    this.authStore.clear()
+  }
+}
