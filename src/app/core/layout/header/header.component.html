@@ -1,5 +1,5 @@
 <div class="flex justify-end gap-2">
-  @if (!authStore.userEmail()) {
+  @if (!authStore.user()?.email) {
     <ng-container>
       <button mat-raised-button color="primary" (click)="openRegister()">
         Register
@@ -10,7 +10,7 @@
     </ng-container>
   } @else {
     <ng-container>
-      <div class="mr-2 flex items-center">Welcome, {{ authStore.userEmail() }}!</div>
+      <div class="mr-2 flex items-center">Welcome, {{ authStore.user()?.email }}!</div>
       <button mat-raised-button color="primary" (click)="logout()">
         Logout
       </button>

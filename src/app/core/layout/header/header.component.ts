@@ -1,9 +1,9 @@
 import {Component, inject} from '@angular/core';
 import {MatButton} from '@angular/material/button';
 import {MatDialog} from '@angular/material/dialog';
-import {LoginComponent} from '../../auth/login/login.component';
-import {RegisterComponent} from '../../auth/register/register.component';
-import {AuthStore} from '../../../core/store/auth.store';
+import {LoginComponent} from '../../../features/auth/login/login.component';
+import {RegisterComponent} from '../../../features/auth/register/register.component';
+import {AuthStore} from '../../store/auth.store';
 
 @Component({
   selector: 'app-header',
