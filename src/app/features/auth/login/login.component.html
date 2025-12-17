@@ -10,11 +10,18 @@
     <input type="password" matInput formControlName="password" />
   </mat-form-field>
 
+  @if(form.errors?.['serverError']) {
+    <mat-error class="mb-3">
+      {{ form.errors?.['serverError'] }}
+    </mat-error>
+  }
+
   <div class="flex justify-end gap-2">
     <button
       mat-raised-button
       color="primary"
       class="w-full sm:w-auto"
+      type="button"
       (click)="closeLoginPopup()"
     >
       Cancel

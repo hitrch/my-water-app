@@ -7,6 +7,9 @@ import { MatButtonModule } from '@angular/material/button'
 import { AuthService } from '../../../core/services/auth.service'
 import {AuthStore} from '../../../core/store/auth.store';
 import {passwordsMatchValidator} from '../../../shared/validators/auth.validators';
+import {HttpErrorResponse} from '@angular/common/http';
+import {catchError, EMPTY, finalize, switchMap, tap} from 'rxjs';
+import {AuthUiService} from '../../../core/services/auth-ui.service';
 
 @Component({
   selector: 'app-register',
@@ -24,8 +27,10 @@ import {passwordsMatchValidator} from '../../../shared/validators/auth.validator
 export class RegisterComponent {
   private fb = inject(FormBuilder)
   private authService = inject(AuthService)
+  private authUiService = inject(AuthUiService)
   private dialogRef = inject<MatDialogRef<RegisterComponent>>(MatDialogRef)
   private authStore = inject(AuthStore)
+  isSubmitting = false
 
   form: FormGroup = this.fb.nonNullable.group(
     {
@@ -37,22 +42,32 @@ export class RegisterComponent {
   )
 
   submitRegister(): void {
-    if (this.form.invalid) return
-    const { email, password, confirmPassword } = this.form.value
-    if (password !== confirmPassword) return console.error('Passwords do not match')
+    if (this.form.invalid || this.isSubmitting) return
 
-    this.authService.register(email, password).subscribe({
-      next: () => {
-        // Auto-login after successful registration
-        this.authService.login(email, password).subscribe({
-          next: res => {
-            this.authStore.setAuth(res.accessToken, res.user)
-            this.dialogRef.close()
-          },
-          error: err => console.error('Login after registration failed', err)
+    // clear previous server error
+    this.form.setErrors(null)
+
+    this.isSubmitting = true
+    const { email, password } = this.form.value
+
+    this.authService.register(email, password)
+      .pipe(
+        // after successful registration -> auto login
+        switchMap(() => this.authService.login(email, password)),
+        tap(res => {
+          this.authStore.setAuth(res.accessToken, res.user)
+          this.dialogRef.close()
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const message = this.authUiService.mapAuthErrorToMessage(err, 'register')
+          this.form.setErrors({ serverError: message })
+          this.form.markAllAsTouched()
+          return EMPTY
+        }),
+        finalize(() => {
+          this.isSubmitting = false
         })
-      },
-      error: err => console.error(err)
-    })
+      )
+      .subscribe()
   }
 }

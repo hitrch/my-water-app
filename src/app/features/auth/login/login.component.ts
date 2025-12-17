@@ -6,6 +6,9 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {AuthService} from '../../../core/services/auth.service';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {AuthStore} from '../../../core/store/auth.store';
+import {HttpErrorResponse} from '@angular/common/http';
+import {finalize} from 'rxjs';
+import {AuthUiService} from '../../../core/services/auth-ui.service';
 
 @Component({
   selector: 'app-login',
@@ -22,8 +25,10 @@ import {AuthStore} from '../../../core/store/auth.store';
 export class LoginComponent {
   private fb = inject(FormBuilder)
   private authService = inject(AuthService)
+  private authUiService = inject(AuthUiService)
   private dialogRef = inject<MatDialogRef<LoginComponent>>(MatDialogRef)
   private authStore = inject(AuthStore)
+  isSubmitting = false
 
   form: FormGroup = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -31,17 +36,28 @@ export class LoginComponent {
   })
 
   submitLogin() {
-    if (this.form.invalid) return
+    if (this.form.invalid || this.isSubmitting) return
+
+    // clear previous server error
+    this.form.setErrors(null)
 
     const { email, password } = this.form.value
-    this.authService.login(email, password).subscribe({
+    this.isSubmitting = true
+    this.authService.login(email, password)
+      .pipe(
+        finalize(() => {
+          this.isSubmitting = false
+        })
+      ).subscribe({
       next: res => {
         this.authStore.setAuth(res.accessToken, res.user)
         this.closeLoginPopup()
       },
-      error: err => {
-        console.error(err)
-        // TODO: show error
+      error: (err: HttpErrorResponse) => {
+        const message = this.authUiService.mapAuthErrorToMessage(err, 'login')
+        // attach a form-level error so the template can show it
+        this.form.setErrors({ serverError: message })
+        this.form.markAllAsTouched()
       },
     })
   }

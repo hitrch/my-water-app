@@ -1,5 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,22 @@ export class AuthUiService {
       maxHeight: '90vh',
       autoFocus: false,
     })
+  }
+
+  mapAuthErrorToMessage(
+    err: HttpErrorResponse,
+    context: 'register' | 'login'
+  ): string {
+    if (err.status === 0) return 'Network error. Check your connection and try again.'
+
+    if (context === 'register') {
+      if (err.status === 409) return 'An account with this email already exists.'
+      return 'Registration failed. Please try again.'
+    }
+
+    // context === 'login'
+    if (err.status === 401) return 'Invalid email or password.'
+    return 'Login failed. Please try again.'
   }
 
   private isMobile(): boolean {
