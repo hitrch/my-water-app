@@ -6,13 +6,13 @@ import {HttpErrorResponse} from '@angular/common/http';
   providedIn: 'root'
 })
 export class AuthUiService {
-  private dialog = inject(MatDialog)
+  private _dialog = inject(MatDialog)
 
   async openLogin(): Promise<void> {
     const { LoginComponent } = await import('../../features/auth/login/login.component')
     const isMobile = this.isMobile()
 
-    this.dialog.open(LoginComponent, {
+    this._dialog.open(LoginComponent, {
       width: isMobile ? '95vw' : '400px',
       maxWidth: isMobile ? '95vw' : '400vw',
       maxHeight: '90vh',
@@ -24,7 +24,7 @@ export class AuthUiService {
     const { RegisterComponent } = await import('../../features/auth/register/register.component')
     const isMobile = this.isMobile()
 
-    this.dialog.open(RegisterComponent, {
+    this._dialog.open(RegisterComponent, {
       width: isMobile ? '95vw' : '440px',
       maxWidth: isMobile ? '95vw' : '440vw',
       maxHeight: '90vh',

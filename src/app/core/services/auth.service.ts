@@ -5,14 +5,14 @@ import { LoginResponse } from '../../shared/models/auth.model'
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private http = inject(HttpClient)
+  private _http = inject(HttpClient)
 
   login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/auth/login', { email, password })
+    return this._http.post<LoginResponse>('/auth/login', { email, password })
   }
 
   register(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>('/auth/register', { email, password })
+    return this._http.post<LoginResponse>('/auth/register', { email, password })
   }
 }
 

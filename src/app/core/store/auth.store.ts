@@ -16,26 +16,27 @@ export class AuthStore {
       }
     })()
   )
-  private _authService = inject(AuthService)
-  readonly isLoading = signal(false)
+  private readonly _authService = inject(AuthService)
+  private readonly _isLoading = signal(false)
 
   readonly  user = computed(() => this._user())
   readonly isAuthenticated = computed(() => !!this._token())
+  readonly isLoading = computed(() => this._isLoading())
 
 
   login(email: string, password: string) {
-    this.isLoading.set(true)
+    this._isLoading.set(true)
     return this._authService.login(email, password).pipe(
       tap(res => this.setAuth(res.accessToken, res.user)),
-      finalize(() => this.isLoading.set(false))
+      finalize(() => this._isLoading.set(false))
     )
   }
 
   register(email: string, password: string) {
-    this.isLoading.set(true)
+    this._isLoading.set(true)
     return this._authService.register(email, password).pipe(
       switchMap(() => this.login(email, password)),
-      finalize(() => this.isLoading.set(false))
+      finalize(() => this._isLoading.set(false))
     )
   }
 
