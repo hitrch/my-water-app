@@ -1,10 +1,57 @@
 <mat-sidenav-container class="min-h-screen">
   <mat-sidenav #sidenav mode="over" position="start" class="w-72 max-w-[80vw]">
-    <nav class="p-4 flex flex-col gap-3">
-      <a routerLink="/" (click)="sidenav.close()" class="hover:underline">Home</a>
-      <a routerLink="/shop" (click)="sidenav.close()" class="hover:underline">Shop</a>
-      <a routerLink="/orders" (click)="sidenav.close()" class="hover:underline">Orders</a>
-    </nav>
+    <div class="flex flex-col h-full bg-white">
+      <!-- Navigation Section -->
+      <nav class="p-6 flex flex-col gap-4 border-b">
+        <a routerLink="/" (click)="sidenav.close()" class="flex items-center gap-3 font-bold text-slate-700">
+          <mat-icon>home</mat-icon> Home
+        </a>
+        <a routerLink="/shop" (click)="sidenav.close()" class="flex items-center gap-3 font-bold text-slate-700">
+          <mat-icon>store</mat-icon> Shop
+        </a>
+        <a routerLink="/orders" (click)="sidenav.close()" class="flex items-center gap-3 font-bold text-slate-700">
+          <mat-icon>history</mat-icon> My Orders
+        </a>
+      </nav>
+
+      <!-- Cart Preview Section -->
+      <div class="flex-1 overflow-y-auto p-6">
+        <h3 class="text-xs font-black uppercase tracking-widest text-slate-400 mb-6">Your Cart</h3>
+
+        @for (item of cartStore.items(); track item.product.id) {
+          <div class="flex items-center gap-4 mb-6 last:mb-0">
+            <div class="h-12 w-12 bg-slate-50 rounded-lg flex items-center justify-center">
+              <mat-icon class="text-blue-200">water_drop</mat-icon>
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-slate-800 leading-tight">{{ item.product.name }}</p>
+              <p class="text-xs text-slate-500">{{ item.quantity }} x {{ item.product.price | currency }}</p>
+            </div>
+            <button mat-icon-button (click)="cartStore.removeFromCart(item.product.id)" class="text-slate-300">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        } @empty {
+          <div class="text-center py-12">
+            <mat-icon class="text-slate-100 scale-[3] mb-6">shopping_basket</mat-icon>
+            <p class="text-slate-400 italic text-sm">Your basket is empty</p>
+          </div>
+        }
+      </div>
+
+      <!-- Checkout Footer -->
+      @if (cartStore.totalItems() > 0) {
+        <div class="p-6 bg-slate-50 border-t">
+          <div class="flex justify-between items-center mb-6">
+            <span class="font-bold text-slate-500 uppercase text-xs">Total Amount</span>
+            <span class="font-black text-2xl text-blue-600">{{ cartStore.totalPrice() | currency }}</span>
+          </div>
+          <button mat-flat-button color="primary" class="w-full h-12 rounded-xl! font-bold" (click)="placeOrder()">
+            Buy Now
+          </button>
+        </div>
+      }
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content class="bg-white text-slate-900">

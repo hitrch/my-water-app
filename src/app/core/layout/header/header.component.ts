@@ -3,8 +3,9 @@ import {MatButton, MatIconButton} from '@angular/material/button';
 import {AuthUiService} from '../../services/auth-ui.service';
 import {AuthStore} from '../../store/auth.store';
 import {NgOptimizedImage} from '@angular/common';
-import {RouterLink} from '@angular/router';
+import {RouterLink, RouterLinkActive} from '@angular/router';
 import {MatIcon} from '@angular/material/icon';
+import {CartStore} from '../../store/cart.store';
 
 @Component({
   selector: 'app-header',
@@ -13,16 +14,20 @@ import {MatIcon} from '@angular/material/icon';
     NgOptimizedImage,
     RouterLink,
     MatIconButton,
-    MatIcon
+    MatIcon,
+    RouterLinkActive
   ],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  private readonly authUiService = inject(AuthUiService)
-  private readonly authStore = inject(AuthStore)
-  user = computed(() => this.authStore.user())
-  menuToggle = output<void>()
+  protected readonly authUiService = inject(AuthUiService)
+  protected readonly authStore = inject(AuthStore)
+  protected readonly cartStore = inject(CartStore)
+
+  protected user = computed(() => this.authStore.user())
+  protected cartCount = computed(() => this.cartStore.totalItems())
+  protected menuToggle = output<void>()
 
   openMenu(): void {
     this.menuToggle.emit()

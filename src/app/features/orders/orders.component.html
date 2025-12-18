@@ -1,0 +1,56 @@
+<h1 class="text-3xl font-bold mb-6 text-slate-800">Your Order History</h1>
+
+@if (orderStore.isLoading()) {
+  <div class="flex flex-col items-center justify-center py-20 gap-4">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p class="text-slate-500">Retrieving your hydration history...</p>
+  </div>
+} @else {
+  <div class="flex flex-col gap-4">
+    @for (order of orderStore.orders(); track order.id) {
+      <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all">
+        <div class="flex flex-wrap justify-between items-center gap-4">
+          <div class="flex items-center gap-4">
+            <div class="bg-blue-50 h-12 w-12 rounded-full flex items-center justify-center">
+              <mat-icon class="text-blue-500">local_shipping</mat-icon>
+            </div>
+            <div>
+              <div class="text-sm text-slate-400 font-bold uppercase tracking-wider">Order ID</div>
+              <div class="font-black text-slate-800">{{ order.id }}</div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-8">
+            <div>
+              <div class="text-sm text-slate-400 font-bold uppercase tracking-wider">Date</div>
+              <div class="text-slate-700 font-medium">{{ order.date | date:'mediumDate' }}</div>
+            </div>
+
+            <div class="text-right">
+              <div class="text-sm text-slate-400 font-bold uppercase tracking-wider">Amount</div>
+              <div class="text-blue-600 font-black text-lg">{{ order.totalPrice | currency }}</div>
+            </div>
+
+            <div class="min-w-24 text-center">
+              <span class="inline-block px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-widest"
+                    [class.bg-green-100]="order.status === 'delivered'"
+                    [class.text-green-700]="order.status === 'delivered'"
+                    [class.bg-amber-100]="order.status === 'pending'"
+                    [class.text-amber-700]="order.status === 'pending'">
+                {{ order.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="text-center py-24 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+        <mat-icon class="text-slate-300 scale-[3] mb-8">history</mat-icon>
+        <p class="text-slate-500 text-lg mb-6 font-medium">No orders found. Stay hydrated!</p>
+        <button mat-flat-button color="primary" routerLink="/shop">
+          Go to Shop
+        </button>
+      </div>
+    }
+  </div>
+}
