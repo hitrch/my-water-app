@@ -24,11 +24,9 @@ import {AuthUiService} from '../../../core/services/auth-ui.service';
 })
 export class LoginComponent {
   private fb = inject(FormBuilder)
-  private authService = inject(AuthService)
   private authUiService = inject(AuthUiService)
   private dialogRef = inject<MatDialogRef<LoginComponent>>(MatDialogRef)
-  private authStore = inject(AuthStore)
-  isSubmitting = false
+  protected authStore = inject(AuthStore)
 
   form: FormGroup = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -36,23 +34,14 @@ export class LoginComponent {
   })
 
   submitLogin() {
-    if (this.form.invalid || this.isSubmitting) return
+    if (this.form.invalid || this.authStore.isLoading()) return
 
     // clear previous server error
     this.form.setErrors(null)
 
     const { email, password } = this.form.value
-    this.isSubmitting = true
-    this.authService.login(email, password)
-      .pipe(
-        finalize(() => {
-          this.isSubmitting = false
-        })
-      ).subscribe({
-      next: res => {
-        this.authStore.setAuth(res.accessToken, res.user)
-        this.closeLoginPopup()
-      },
+    this.authStore.login(email, password).subscribe({
+      next: () =>  this.closeLoginPopup(),
       error: (err: HttpErrorResponse) => {
         const message = this.authUiService.mapAuthErrorToMessage(err, 'login')
         // attach a form-level error so the template can show it

@@ -31,9 +31,13 @@
       color="primary"
       type="submit"
       class="w-full sm:w-auto"
-      [disabled]="form.invalid"
+      [disabled]="form.invalid || authStore.isLoading()"
     >
-      Login
+      @if (authStore.isLoading()) {
+        Logging in...
+      } @else {
+        Login
+      }
     </button>
   </div>
 </form>

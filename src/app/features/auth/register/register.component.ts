@@ -26,11 +26,9 @@ import {AuthUiService} from '../../../core/services/auth-ui.service';
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder)
-  private authService = inject(AuthService)
   private authUiService = inject(AuthUiService)
   private dialogRef = inject<MatDialogRef<RegisterComponent>>(MatDialogRef)
-  private authStore = inject(AuthStore)
-  isSubmitting = false
+  protected readonly authStore = inject(AuthStore)
 
   form: FormGroup = this.fb.nonNullable.group(
     {
@@ -42,32 +40,21 @@ export class RegisterComponent {
   )
 
   submitRegister(): void {
-    if (this.form.invalid || this.isSubmitting) return
+    if (this.form.invalid || this.authStore.isLoading()) return
 
     // clear previous server error
     this.form.setErrors(null)
 
-    this.isSubmitting = true
     const { email, password } = this.form.value
 
-    this.authService.register(email, password)
-      .pipe(
-        // after successful registration -> auto login
-        switchMap(() => this.authService.login(email, password)),
-        tap(res => {
-          this.authStore.setAuth(res.accessToken, res.user)
-          this.dialogRef.close()
-        }),
-        catchError((err: HttpErrorResponse) => {
+    this.authStore.register(email, password)
+      .subscribe({
+        next: () => this.dialogRef.close(),
+        error: (err: HttpErrorResponse) => {
           const message = this.authUiService.mapAuthErrorToMessage(err, 'register')
           this.form.setErrors({ serverError: message })
           this.form.markAllAsTouched()
-          return EMPTY
-        }),
-        finalize(() => {
-          this.isSubmitting = false
-        })
-      )
-      .subscribe()
+        }
+      })
   }
 }

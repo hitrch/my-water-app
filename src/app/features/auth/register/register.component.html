@@ -50,9 +50,13 @@
         color="primary"
         type="submit"
         class="w-full sm:w-auto"
-        [disabled]="form.invalid"
+        [disabled]="form.invalid || authStore.isLoading()"
       >
-        Register
+        @if (authStore.isLoading()) {
+          Registering...
+        } @else {
+          Register
+        }
       </button>
     </div>
   </form>
