@@ -1,9 +1,25 @@
-<div class="flex min-h-screen flex-col">
-  <app-header class="min-h-16 bg-slate-800 px-4 py-3 text-white sm:min-h-16 sm:py-4"></app-header>
+<mat-sidenav-container class="min-h-screen">
+  <mat-sidenav #sidenav mode="over" position="start" class="w-72 max-w-[80vw]">
+    <nav class="p-4 flex flex-col gap-3">
+      <a routerLink="/" (click)="sidenav.close()" class="hover:underline">Home</a>
+      <a routerLink="/shop" (click)="sidenav.close()" class="hover:underline">Shop</a>
+      <a routerLink="/orders" (click)="sidenav.close()" class="hover:underline">Orders</a>
+    </nav>
+  </mat-sidenav>
 
-  <main class="grow px-4 py-4 sm:px-6">
-    <router-outlet></router-outlet>
-  </main>
+  <mat-sidenav-content class="bg-white text-slate-900">
+    <div class="min-h-screen flex flex-col">
+      <header class="bg-slate-800 px-4 py-3 text-white">
+        <app-header (menuToggle)="sidenav.toggle()"></app-header>
+      </header>
 
-  <app-footer class="bg-slate-800 px-4 py-3 text-white"></app-footer>
-</div>
+      <main class="flex-1 px-4 py-4">
+        <router-outlet></router-outlet>
+      </main>
+
+      <footer class="bg-slate-800 px-4 py-3 text-white">
+        <app-footer></app-footer>
+      </footer>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

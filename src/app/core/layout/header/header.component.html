@@ -1,4 +1,25 @@
-<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
+<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+  <div class="flex justify-center items-center">
+    <button
+      mat-icon-button
+      type="button"
+      aria-label="Open menu"
+      class="menu-btn"
+      (click)="openMenu()"
+    >
+      <mat-icon [style.color]="'#fff'">menu</mat-icon>
+    </button>
+    <img
+      ngSrc="assets/logo.svg"
+      alt="my-water-app"
+      width="32"
+      height="32"
+      class="w-8 h-8 object-contain"
+      routerLink="/"
+    />
+    <span>My Water App</span>
+  </div>
+
   @if (!user()?.email) {
     <div class="flex flex-col gap-2 sm:flex-row sm:gap-2">
       <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="openRegister()">
