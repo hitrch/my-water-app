@@ -1,4 +1,4 @@
-<div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-2">
+<div class="flex flex-row items-center justify-between w-full h-full">
   <div class="flex justify-center items-center">
     <button
       mat-icon-button
@@ -17,7 +17,9 @@
       class="w-8 h-8 object-contain"
       routerLink="/"
     />
-    <span>My Water App</span>
+
+    <span class="ml-2 font-bold tracking-tight hidden xs:block">My Water App</span>
+
     <nav class="hidden md:flex items-center gap-4 ml-6">
       <a routerLink="/shop" routerLinkActive="text-blue-400"
          class="text-sm font-bold uppercase tracking-widest hover:text-blue-200 transition-colors">Shop</a>
@@ -26,9 +28,9 @@
     </nav>
   </div>
 
-  <div class="flex items-center gap-2">
+  <div class="flex items-center gap-1 sm:gap-4">
     <!-- Cart Icon with dynamic badge -->
-    <button mat-icon-button class="relative" aria-label="View cart">
+    <button mat-icon-button class="relative" aria-label="View cart" (click)="openMenu()">
       <mat-icon [style.color]="'#fff'">shopping_cart</mat-icon>
       @if (cartCount() > 0) {
         <span
@@ -38,24 +40,27 @@
       }
     </button>
 
-    @if (!user()?.email) {
-      <div class="flex flex-col gap-2 sm:flex-row sm:gap-2">
-        <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="openRegister()">
-          Register
-        </button>
-        <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="openLogin()">
-          Login
-        </button>
-      </div>
-    } @else {
-      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
-        <div class="max-w-full sm:max-w-[320px] truncate text-center">
-          Welcome, {{ user()?.email }}!
+    <!-- Desktop Auth (Hidden on mobile) -->
+    <div class="hidden sm:flex items-center gap-2">
+      @if (!user()?.email) {
+        <div class="flex flex-col gap-2 sm:flex-row sm:gap-2">
+          <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="openRegister()">
+            Register
+          </button>
+          <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="openLogin()">
+            Login
+          </button>
         </div>
-        <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="logout()">
-          Logout
-        </button>
-      </div>
-    }
+      } @else {
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-2">
+          <div class="max-w-full sm:max-w-[320px] truncate text-center">
+            Welcome, {{ user()?.email }}!
+          </div>
+          <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="logout()">
+            Logout
+          </button>
+        </div>
+      }
+    </div>
   </div>
 </div>

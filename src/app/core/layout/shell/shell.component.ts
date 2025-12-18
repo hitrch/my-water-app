@@ -8,6 +8,8 @@ import {OrderStore} from '../../store/order.store';
 import {MatIcon} from '@angular/material/icon';
 import {MatButton, MatIconButton} from '@angular/material/button';
 import {CurrencyPipe} from '@angular/common';
+import {AuthStore} from '../../store/auth.store';
+import {AuthUiService} from '../../services/auth-ui.service';
 
 @Component({
   selector: 'app-shell',
@@ -30,8 +32,22 @@ import {CurrencyPipe} from '@angular/common';
 export class ShellComponent {
   protected readonly cartStore = inject(CartStore)
   protected readonly orderStore = inject(OrderStore)
+  protected readonly authStore = inject(AuthStore)
+  protected readonly authUiService = inject(AuthUiService)
 
   placeOrder() {
     this.orderStore.placeOrder()
+  }
+
+  openLogin() {
+    void this.authUiService.openLogin()
+  }
+
+  openRegister() {
+    void this.authUiService.openRegister()
+  }
+
+  logout() {
+    this.authStore.clear()
   }
 }
