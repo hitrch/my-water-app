@@ -45,6 +45,11 @@ export class OrderStore {
         }),
         finalize(() => this._isLoading.set(false))
       )
-      .subscribe()
+      .subscribe({
+        error: (err) => {
+          console.error('Order failed', err)
+          this._notificationService.showError('Failed to place order. Please try again.')
+        }
+      })
   }
 }
