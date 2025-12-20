@@ -23,9 +23,12 @@
         <a routerLink="/shop" (click)="sidenav.close()" class="flex items-center gap-3 font-bold text-slate-700">
           <mat-icon>store</mat-icon> Shop
         </a>
-        <a routerLink="/orders" (click)="sidenav.close()" class="flex items-center gap-3 font-bold text-slate-700">
-          <mat-icon>history</mat-icon> My Orders
-        </a>
+
+        @if(authStore.isAuthenticated()) {
+          <a routerLink="/orders" (click)="sidenav.close()" class="flex items-center gap-3 font-bold text-slate-700">
+            <mat-icon>history</mat-icon> My Orders
+          </a>
+        }
       </nav>
 
       <!-- Cart Preview Section -->
@@ -60,9 +63,15 @@
             <span class="font-bold text-slate-500 uppercase text-xs">Total Amount</span>
             <span class="font-black text-2xl text-blue-600">{{ cartStore.totalPrice() | currency }}</span>
           </div>
-          <button mat-flat-button color="primary" class="w-full h-12 rounded-xl! font-bold" (click)="placeOrder()">
-            Buy Now
-          </button>
+          @if (authStore.isAuthenticated()) {
+            <button mat-flat-button color="primary" class="w-full h-12 rounded-xl! font-bold" (click)="placeOrder()">
+              Buy Now
+            </button>
+          } @else {
+            <button mat-flat-button color="accent" class="w-full h-12 rounded-xl! font-bold" (click)="openLogin()">
+              Login to Checkout
+            </button>
+          }
         </div>
       }
     </div>

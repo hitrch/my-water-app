@@ -37,7 +37,7 @@
 
     <!-- Desktop Auth (Hidden on mobile) -->
     <div class="hidden sm:flex items-center gap-2">
-      @if (!user()?.email) {
+      @if (!authStore.isAuthenticated()) {
         <div class="flex flex-col gap-2 sm:flex-row sm:gap-2">
           <button mat-raised-button color="primary" class="w-full sm:w-auto" (click)="openRegister()">
             Register
