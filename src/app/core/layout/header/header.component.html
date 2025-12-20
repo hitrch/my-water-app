@@ -9,16 +9,11 @@
     >
       <mat-icon [style.color]="'#fff'">menu</mat-icon>
     </button>
-    <img
-      ngSrc="assets/logo.svg"
-      alt="my-water-app"
-      width="32"
-      height="32"
-      class="w-8 h-8 object-contain"
-      routerLink="/"
-    />
 
-    <span class="ml-2 font-bold tracking-tight hidden xs:block">My Water App</span>
+    <a routerLink="/" class="flex items-center">
+      <img ngSrc="assets/logo.svg" alt="Logo" class="h-8 w-8" height="48" width="48">
+      <span class="ml-2 font-bold tracking-tight hidden sm:block">My Water App</span>
+    </a>
 
     <nav class="hidden md:flex items-center gap-4 ml-6">
       <a routerLink="/shop" routerLinkActive="text-blue-400"
