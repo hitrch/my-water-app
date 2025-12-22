@@ -10,15 +10,16 @@ export class NotificationService {
       duration: 5000,
       panelClass: ['error-snackbar'],
       horizontalPosition: 'end',
-      verticalPosition: 'bottom'
+      verticalPosition: 'top'
     })
   }
 
   showSuccess(message: string) {
     this.snackBar.open(message, 'Dismiss', {
       duration: 3000,
+      panelClass: ['success-snackbar'],
       horizontalPosition: 'end',
-      verticalPosition: 'bottom'
+      verticalPosition: 'top'
     })
   }
 }
